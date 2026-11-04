@@ -1,0 +1,118 @@
+.footer{
+    background-color: #0B3E5C;
+    width: 100%;
+    min-width: 191px;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    font-family: 'inter', sans-serif !important;
+    font-weight: semi-bold;
+    font-size: 14px;
+    
+}
+.footer .detalle-footer{
+    order: 1;
+    display: flex;
+    gap: 10px;
+    
+}
+.copy-footer{
+    order: 2;
+    border-top: solid 1px #D9B40F;
+    margin-right: 15px;
+    text-align: center;
+}
+.texto-footer-d{
+display: grid;
+grid-template-columns: auto auto;
+min-height: 142px;
+margin: auto;
+}
+.linea-footer{
+    grid-column: 1/2;
+    grid-row: 1/3;
+    background-color: #D9B40F;
+    height: 110px;
+    width: 3px;
+    margin-right: 10px;
+    align-self: center;
+}
+.title-tf{
+    grid-column: 2/3;
+    grid-row: 1/2;
+    font-family: 'Baloo', sans-serif;
+    color: #D9B40F;
+    font-size: 48px;
+    
+}
+.texto-footer-d span{
+    max-width: 330px;
+    text-align: justify;
+}
+.contacto-footer-d{
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    margin: 10px auto auto;
+    
+    
+}
+
+.iconsfooter {
+    grid-column: 1/2;
+    grid-row: 2/3;
+    color: #9e9e9e;
+    font-size: 24px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+    align-self: center;
+    
+    
+}
+.title-cf{
+    grid-column: 1/3;
+    grid-row: 1/2;
+    
+}
+.det-cf{
+    grid-column: 2/3;
+    grid-row: 2/3;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+
+.horario-footer-d{
+    display: flex;
+    flex-direction: column;
+    margin: 10px auto;
+    align-items: center;
+}
+.det-hf div{
+    flex-wrap: wrap;
+
+}
+
+.title-cf, .title-hf{
+    font-family: 'Baloo', sans-serif;
+    font-size: 24px;
+    text-align: center;
+    border-bottom: solid 3px #D9B40F;
+    margin: 0 5px 10px;
+    white-space: nowrap;
+}
+
+@media (max-width:650px) {
+    .detalle-footer{
+        flex-wrap: wrap;
+    }
+}
+@media(max-width : 257px){
+    .title-cf, .title-hf{ 
+        white-space: wrap;
+    }
+}
