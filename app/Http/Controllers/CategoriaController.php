@@ -11,11 +11,11 @@ use Illuminate\Http\Request;
  */
 class CategoriaController extends Controller
 {
-    
     public function __construct()
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +23,8 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        $categorias = Categoria::paginate();
+        // Se cargan previamente los productos locales y los de Deltron junto con la paginación
+        $categorias = Categoria::with(['productos', 'productosDeltron'])->paginate();
 
         return view('categoria.index', compact('categorias'))
             ->with('i', (request()->input('page', 1) - 1) * $categorias->perPage());
@@ -64,7 +65,8 @@ class CategoriaController extends Controller
      */
     public function show($id)
     {
-        $categoria = Categoria::find($id);
+        // Se precargan las relaciones para la vista detallada de la categoría
+        $categoria = Categoria::with(['productos', 'productosDeltron'])->findOrFail($id);
 
         return view('categoria.show', compact('categoria'));
     }
@@ -77,7 +79,7 @@ class CategoriaController extends Controller
      */
     public function edit($id)
     {
-        $categoria = Categoria::find($id);
+        $categoria = Categoria::findOrFail($id);
 
         return view('categoria.edit', compact('categoria'));
     }
@@ -106,7 +108,7 @@ class CategoriaController extends Controller
      */
     public function destroy($id)
     {
-        $categoria = Categoria::find($id)->delete();
+        Categoria::findOrFail($id)->delete();
 
         return redirect()->route('categorias.index')
             ->with('success', 'Categoria deleted successfully');

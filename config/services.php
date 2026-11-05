@@ -31,4 +31,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'deltron' => [
+    'base_url' => env('DELTRON_BASE_URL'),
+    'key'      => env('DELTRON_API_KEY'),
+    'secret'   => env('DELTRON_API_SECRET'),
+    ],
+
 ];

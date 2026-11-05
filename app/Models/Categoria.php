@@ -41,5 +41,16 @@ class Categoria extends Model
         return $this->hasMany('App\Models\Producto', 'categoria_id', 'id');
     }
     
+    // Nueva relación con productos de Deltron
+    public function productosDeltron()
+    {
+        return $this->hasMany(DeltronProducto::class, 'categoria_id');
+    }
+
+    // Accessor para combinar productos locales y de Deltron
+    public function getTodosLosProductosAttribute()
+    {
+        return $this->productos->concat($this->productosDeltron);
+    }
 
 }
