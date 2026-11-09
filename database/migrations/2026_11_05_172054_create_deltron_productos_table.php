@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('sku')->unique();
             $table->string('nombre');
-            $table->decimal('precio', 10, 2);
-            $table->decimal('precio_costo_usd', 10, 2)->nullable();
+            $table->decimal('precio', 10, 2); // Precio de venta final público (S/ 125.00)
+            $table->decimal('precio_costo_soles', 10, 2)->nullable(); // Precio del proveedor en soles (S/ 100.00)
+            $table->decimal('precio_costo_usd', 10, 2)->nullable(); // Costo original en USD
             $table->integer('stock')->default(0);
             $table->string('imagen')->nullable();
             $table->foreignId('categoria_id')->nullable()->constrained('categorias')->nullOnDelete();

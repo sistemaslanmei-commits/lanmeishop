@@ -13,6 +13,7 @@ class DeltronProducto extends Model
         'sku',
         'nombre',
         'precio',
+        'precio_costo_soles',
         'precio_costo_usd',
         'stock',
         'imagen',

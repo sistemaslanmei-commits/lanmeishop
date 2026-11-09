@@ -50,7 +50,11 @@ class Categoria extends Model
     // Accessor para combinar productos locales y de Deltron
     public function getTodosLosProductosAttribute()
     {
-        return $this->productos->concat($this->productosDeltron);
+        $locales = $this->productos ?? collect();
+        $deltron = $this->productosDeltron ?? collect();
+
+        return $locales->concat($deltron);
+        //return $this->productos->concat($this->productosDeltron);
     }
 
 }

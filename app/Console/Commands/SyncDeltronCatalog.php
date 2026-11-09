@@ -11,21 +11,21 @@ use App\Models\Categoria;
 class SyncDeltronCatalog extends Command
 {
     /**
-     * The name and signature of the console command.
+     * El nombre y firma del comando en la consola.
      *
      * @var string
      */
     protected $signature = 'deltron:sync-catalog';
 
     /**
-     * The console command description.
+     * La descripción del comando.
      *
      * @var string
      */
     protected $description = 'Autentica con caché de 23h y sincroniza el catálogo masivo de Deltron';
 
     /**
-     * Execute the console command.
+     * Ejecuta el comando de consola.
      */
     public function handle()
     {
@@ -84,7 +84,7 @@ class SyncDeltronCatalog extends Command
         $data = $catalogResponse->json('result');
         $tipoCambio = $data['currency_change_val'] ?? 3.80;
         $items = $data['items'] ?? [];
-        $margenGanancia = 0.15; // 15% de margen comercial sobre el costo total con IGV
+        $margenGanancia = 0.25; // Margen de ganancia comercial del 25%
 
         $this->info('3. Procesando ' . count($items) . ' productos del catálogo...');
 
@@ -102,27 +102,31 @@ class SyncDeltronCatalog extends Command
                 }
             }
 
-            // 1. Seleccionar precio base en USD de forma segura (verificando existencia de claves)
+            // 1. Seleccionar precio base en USD (promoción o regular)
             $tienePromo = !empty($item['promocion_activa']) && !empty($item['price_promo']);
             $precioBaseUSD = $tienePromo ? $item['price_promo'] : ($item['price'] ?? 0);
 
-            // 2. Fórmula: (Precio Base USD * 1.18 IGV * Tipo Cambio) * (1 + 15% Margen)
+            // 2. Costo del proveedor en Soles con IGV 18% (Ej: S/ 100.00)
             $precioConIgvUSD = $precioBaseUSD * 1.18;
-            $precioFinalSoles = round(($precioConIgvUSD * $tipoCambio) * (1 + $margenGanancia), 2);
+            $precioCostoSoles = round($precioConIgvUSD * $tipoCambio, 2);
 
-            // 3. Insertar o actualizar registro por SKU (UPSERT)
+            // 3. Precio de Venta al Público (+25% sobre el costo en soles) (Ej: S/ 125.00)
+            $precioVentaFinal = round($precioCostoSoles * (1 + $margenGanancia), 2);
+
+            // 4. Insertar o actualizar registro por SKU
             DeltronProducto::updateOrCreate(
                 ['sku' => $item['sku']],
                 [
                     'nombre'                => $item['name'] ?? 'Producto sin nombre',
-                    'precio'                => $precioFinalSoles,
+                    'precio'                => $precioVentaFinal, // Se muestra en la web (S/ 125.00)
+                    'precio_costo_soles'    => $precioCostoSoles, // Costo del proveedor (S/ 100.00)
                     'precio_costo_usd'      => $precioBaseUSD,
                     'stock'                 => $stockTotal,
                     'imagen'                => $item['images']['image_listado'] ?? null,
                     'categoria_id'          => $categoria->id,
                     'marca'                 => $item['brand_name'] ?? null,
                     'especificaciones_html' => $item['specs']['specs_all_html'] ?? null,
-                    'enlace'                => 'https://wa.me/51905467384?text=' . urlencode('Consulta por: ' . ($item['name'] ?? '')),
+                    'enlace'                => 'https://wa.me/51905467384?text=' . urlencode('Hola, deseo consultar por el producto [' . ($item['sku'] ?? '') . '] ' . ($item['name'] ?? '')),
                     'enlaceVea'             => null
                 ]
             );
